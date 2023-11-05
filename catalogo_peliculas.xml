@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<catalogo>
+    <pelicula id="tt0111161">
+        <titulo>Cadena Perpetua</titulo>
+        <director>Frank Darabont</director>
+        <anio>1994</anio>
+        <genero>Drama</genero>
+        <valoracion>4.8</valoracion>
+    </pelicula>
+    <pelicula id="tt0068646">
+        <titulo>El Padrino</titulo>
+        <director>Francis Ford Coppola</director>
+        <anio>1972</anio>
+        <genero>Crimen</genero>
+        <valoracion>4.7</valoracion>
+    </pelicula>
+    <pelicula id="tt0468569" descontinuada="false">
+        <titulo>El Caballero de la Noche</titulo>
+        <director>Christopher Nolan</director>
+        <anio>2008</anio>
+        <genero>Accion</genero>
+        <valoracion>4.5</valoracion>
+    </pelicula>
+    <!-- Más películas... -->
+</catalogo>

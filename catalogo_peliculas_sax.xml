@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalogo>
+    <pelicula id="1">
+        <titulo>El Padrino</titulo>
+        <director>Francis Ford Coppola</director>
+        <anio>1972</anio>
+        <genero>Drama</genero>
+        <actores>
+            <actor>Marlon Brando</actor>
+            <actor>Al Pacino</actor>
+            <actor>James Caan</actor>
+            <actor>Diane Keaton</actor>
+        </actores>
+    </pelicula>
+    <pelicula id="2">
+        <titulo>La Lista de Schindler</titulo>
+        <director>Steven Spielberg</director>
+        <anio>1993</anio>
+        <genero>Historia</genero>
+        <actores>
+            <actor>Liam Neeson</actor>
+            <actor>Ben Kingsley</actor>
+            <actor>Ralph Fiennes</actor>
+        </actores>
+    </pelicula>
+    <pelicula id="3">
+        <titulo>El Club de la Lucha</titulo>
+        <director>David Fincher</director>
+        <anio>1999</anio>
+        <genero>Drama</genero>
+        <actores>
+            <actor>Brad Pitt</actor>
+            <actor>Edward Norton</actor>
+            <actor>Helena Bonham Carter</actor>
+        </actores>
+    </pelicula>
+    <pelicula id="4">
+        <titulo>Forrest Gump</titulo>
+        <director>Robert Zemeckis</director>
+        <anio>1994</anio>
+        <genero>Drama</genero>
+        <actores>
+            <actor>Tom Hanks</actor>
+            <actor>Robin Wright</actor>
+            <actor>Gary Sinise</actor>
+        </actores>
+    </pelicula>
+    <pelicula id="5">
+        <titulo>Inception</titulo>
+        <director>Christopher Nolan</director>
+        <anio>2010</anio>
+        <genero>Ciencia Ficción</genero>
+        <actores>
+            <actor>Leonardo DiCaprio</actor>
+            <actor>Joseph Gordon-Levitt</actor>
+            <actor>Ellen Page</actor>
+            <actor>Tom Hardy</actor>
+        </actores>
+    </pelicula>
+    <!-- Añade más películas según sea necesario -->
+</catalogo>
