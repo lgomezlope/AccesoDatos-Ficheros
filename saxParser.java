@@ -11,9 +11,9 @@ import java.io.*;
 import java.net.URL;
 
 public class saxParser extends DefaultHandler {
-    private StringBuilder currentData;
+    private static String tituloCreado;
     private boolean inTituloElement;
-    private int currentId;
+    private static int idBuscado;
     private boolean modifyTitle; // Variable para rastrear si debemos modificar el título
 
     public static void main(String[] args) {
@@ -37,12 +37,11 @@ public class saxParser extends DefaultHandler {
             String nuevoTitulo = reader.readLine();
 
             // Setear el ID y el nuevo título para la modificación
-            ((saxParser) handler).setModificationParameters(id, nuevoTitulo);
-            
+            setModificationParameters(id, nuevoTitulo);
             saxParser.parse(new InputSource(inputStream), handler);
 
             // Guardar los cambios en el archivo XML
-            ((saxParser) handler).guardarCambiosEnArchivo("/home/desarrollo/Documentos/Leo/Lope de Vega/Acceso a Datos 2º DAM/Tema 1/Leo/catalogo_peliculas_sax.xml");
+            guardarCambiosEnArchivo("/home/desarrollo/Documentos/Leo/Lope de Vega/Acceso a Datos 2º DAM/Tema 1/Leo/catalogo_peliculas_sax.xml");
 
             System.out.println("Título modificado con éxito.");
         } catch (Exception e) {
@@ -63,79 +62,78 @@ public class saxParser extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         System.out.println("Inicio de Elemento: " + qName);
-        if (qName.equalsIgnoreCase("titulo")) {
-            inTituloElement = true;
-            currentData = new StringBuilder();
-        }
-        if (qName.equalsIgnoreCase("pelicula")) {
-            int id = Integer.parseInt(attributes.getValue("id"));
-            if (id == currentId) {
-                modifyTitle = true;
-            }
-        }
+
     }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         System.out.println("Fin de Elemento: " + qName);
-        if (qName.equalsIgnoreCase("titulo")) {
-            inTituloElement = false;
-            if (modifyTitle) {
-                currentData = new StringBuilder();
-            }
-        }
-        if (qName.equalsIgnoreCase("pelicula")) {
-            modifyTitle = false;
-        }
+
     }
 
     @Override
     public void characters(char ch[], int start, int length) throws SAXException {
         if (inTituloElement && modifyTitle) {
-            currentData.append(new String(ch, start, length));
+        	//nuevoTitulo.append(new String(ch, start, length));
         }
     }
 
     // Método para configurar el ID y el nuevo título para la modificación
-    public void setModificationParameters(int id, String nuevoTitulo) {
-        currentId = id;
-        // Actualizamos el título si es diferente del título actual
+    public static void setModificationParameters(int id, String nuevoTitulo) {
+        idBuscado = id;
         if (!nuevoTitulo.isEmpty()) {
-            currentData = new StringBuilder(nuevoTitulo);
+            // Establecer el nuevo título solo si no está vacío
+        	tituloCreado = new String(nuevoTitulo);
         }
     }
 
     // Método para guardar los cambios en el archivo XML
  // Método para guardar los cambios en el archivo XML
-    public void guardarCambiosEnArchivo(String filePath) throws IOException {
+    public static void guardarCambiosEnArchivo(String filePath) throws IOException {
         try {
-            // Crear un lector para leer el archivo XML original
-            BufferedReader reader = new BufferedReader(new FileReader(filePath));
-            StringBuilder fileContent = new StringBuilder();
-            String line;
+            File inputFile = new File(filePath);
+            File tempFile = new File("tempfile.xml");
 
-            // Leer el archivo y reemplazar el título si es necesario
+            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+            String currentLine;
             boolean inPelicula = false;
-            while ((line = reader.readLine()) != null) {
-                if (line.trim().startsWith("<pelicula id=\"" + currentId + "\">")) {
+            boolean updatedTitle = false;
+            while ((currentLine = reader.readLine()) != null) {
+                if (currentLine.trim().startsWith("<pelicula id=\"" + idBuscado + "\">")) {
                     inPelicula = true;
                 }
-
-                if (inPelicula && line.trim().startsWith("<titulo>")) {
-                    // Reemplazar el título antiguo con el nuevo título
-                    line = "        <titulo>" + currentData.toString() + "</titulo>";
+            	System.out.println(inPelicula + " " + tituloCreado);
+                if (inPelicula && currentLine.trim().startsWith("<titulo>")) {
+                    if (!tituloCreado.toString().isEmpty()) {
+                        // Reemplazar el título solo si se proporciona un nuevo título no vacío
+                        currentLine = "        <titulo>" + tituloCreado.toString() + "</titulo>";
+                        updatedTitle = true;
+                    }
                     inPelicula = false; // Dejar de buscar después de reemplazar
                 }
 
-                fileContent.append(line).append(System.lineSeparator());
+                writer.write(currentLine + System.lineSeparator());
             }
 
+            writer.close();
             reader.close();
 
-            // Escribir los cambios en el archivo XML
-            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
-            writer.write(fileContent.toString());
-            writer.close();
+            // Reemplazar el archivo original con el archivo temporal solo si el título se ha actualizado
+            if (updatedTitle) {
+                if (!inputFile.delete()) {
+                    System.out.println("No se pudo eliminar el archivo original.");
+                    return;
+                }
+
+                if (!tempFile.renameTo(inputFile)) {
+                    System.out.println("No se pudo renombrar el archivo temporal.");
+                }
+            } else {
+                // No se actualizó el título, no es necesario reemplazar el archivo original
+                tempFile.delete(); // Eliminar el archivo temporal
+            }
         } catch (IOException e) {
             e.printStackTrace();
             throw e;
